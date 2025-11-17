@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server'
-import { requireAuth, requireAdmin, requireProvider } from '@/lib/auth-helpers'
+import { NextResponse } from "next/server";
+import { requireAuth, requireAdmin, requireProvider } from "@/lib/auth-helpers";
 
 // Example: Public endpoint (no auth required)
 export async function GET(req: Request) {
-  return NextResponse.json({ 
-    message: 'This is a public endpoint',
-    data: 'Anyone can access this'
-  })
+  return NextResponse.json({
+    message: "This is a public endpoint",
+    data: "Anyone can access this",
+  });
 }
 
 // Example: Protected endpoint (requires authentication)

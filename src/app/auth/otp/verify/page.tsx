@@ -1,55 +1,58 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Container } from '@/components/container'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Container } from "@/components/container";
 
 export default function VerifyOtpPage() {
-  const router = useRouter()
-  const [userId, setUserId] = useState('')
-  const [code, setCode] = useState('')
-  const [purpose, setPurpose] = useState<'login' | 'verify_email' | 'reset_password'>('login')
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [userId, setUserId] = useState("");
+  const [code, setCode] = useState("");
+  const [purpose, setPurpose] = useState<
+    "login" | "verify_email" | "reset_password"
+  >("login");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleVerify(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    setMessage('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setMessage("");
 
     try {
-      const response = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId, purpose, code })
-      })
+      const response = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, purpose, code }),
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Verification failed')
+        throw new Error(data.error || "Verification failed");
       }
 
-      setMessage(data.message || 'OTP verified successfully!')
-      
+      setMessage(data.message || "OTP verified successfully!");
+
       // Redirect based on purpose
       setTimeout(() => {
-        if (purpose === 'login') {
-          router.push('/auth/login?message=OTP verified. Please sign in.')
-        } else if (purpose === 'verify_email') {
-          router.push('/auth/login?message=Email verified. You can now sign in.')
-        } else if (purpose === 'reset_password') {
-          router.push('/auth/reset-password?verified=true')
+        if (purpose === "login") {
+          router.push("/auth/login?message=OTP verified. Please sign in.");
+        } else if (purpose === "verify_email") {
+          router.push(
+            "/auth/login?message=Email verified. You can now sign in."
+          );
+        } else if (purpose === "reset_password") {
+          router.push("/auth/reset-password?verified=true");
         }
-      }, 1500)
-
+      }, 1500);
     } catch (err: any) {
-      setError(err.message || 'Invalid or expired code')
+      setError(err.message || "Invalid or expired code");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -87,7 +90,10 @@ export default function VerifyOtpPage() {
 
               {/* User ID */}
               <div>
-                <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="userId"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   User ID <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -104,7 +110,10 @@ export default function VerifyOtpPage() {
 
               {/* Purpose */}
               <div>
-                <label htmlFor="purpose" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="purpose"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Purpose <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -123,14 +132,19 @@ export default function VerifyOtpPage() {
 
               {/* OTP Code */}
               <div>
-                <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="code"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Verification Code <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="code"
                   type="text"
                   value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  onChange={(e) =>
+                    setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
                   required
                   maxLength={6}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-center text-2xl tracking-widest font-mono"
@@ -148,19 +162,19 @@ export default function VerifyOtpPage() {
                 disabled={loading || code.length !== 6}
                 className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Verifying...' : 'Verify Code'}
+                {loading ? "Verifying..." : "Verify Code"}
               </button>
             </form>
 
             {/* Links */}
             <div className="mt-6 text-center space-y-2">
-              <Link 
+              <Link
                 href="/auth/otp/request"
                 className="block text-primary hover:text-primary/80 font-medium"
               >
                 Resend verification code
               </Link>
-              <Link 
+              <Link
                 href="/auth/login"
                 className="block text-gray-600 hover:text-gray-900"
               >
@@ -172,11 +186,12 @@ export default function VerifyOtpPage() {
           {/* Info */}
           <div className="mt-6 text-center text-sm text-gray-600">
             <p>
-              Didn&apos;t receive a code? Check your spam folder or request a new one.
+              Didn&apos;t receive a code? Check your spam folder or request a
+              new one.
             </p>
           </div>
         </div>
       </Container>
     </div>
-  )
+  );
 }

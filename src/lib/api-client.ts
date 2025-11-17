@@ -3,15 +3,17 @@
  * Use these in your React components to call protected API routes
  */
 
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from "@/lib/supabase/client";
 
 /**
  * Get the current user's access token for API requests
  */
 async function getAccessToken(): Promise<string | null> {
-  const supabase = createClient()
-  const { data: { session } } = await supabase.auth.getSession()
-  return session?.access_token || null
+  const supabase = createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session?.access_token || null;
 }
 
 /**
@@ -22,20 +24,20 @@ export async function authenticatedFetch(
   url: string,
   options: RequestInit = {}
 ): Promise<Response> {
-  const token = await getAccessToken()
+  const token = await getAccessToken();
 
   if (!token) {
-    throw new Error('No authentication token available')
+    throw new Error("No authentication token available");
   }
 
   return fetch(url, {
     ...options,
     headers: {
       ...options.headers,
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-  })
+  });
 }
 
 // ====================================================
@@ -46,54 +48,57 @@ export async function authenticatedFetch(
  * Get all users (Admin only)
  */
 export async function getAllUsers() {
-  const response = await authenticatedFetch('/api/admin/users', {
-    method: 'GET',
-  })
+  const response = await authenticatedFetch("/api/admin/users", {
+    method: "GET",
+  });
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Failed to fetch users')
+    const error = await response.json();
+    throw new Error(error.error || "Failed to fetch users");
   }
 
-  return response.json()
+  return response.json();
 }
 
 /**
  * Update user details (Admin only)
  */
-export async function updateUser(userId: string, updates: {
-  full_name?: string
-  role?: 'admin' | 'provider' | 'customer'
-  avatar_url?: string
-}) {
-  const response = await authenticatedFetch('/api/admin/users', {
-    method: 'POST',
+export async function updateUser(
+  userId: string,
+  updates: {
+    full_name?: string;
+    role?: "admin" | "provider" | "customer";
+    avatar_url?: string;
+  }
+) {
+  const response = await authenticatedFetch("/api/admin/users", {
+    method: "POST",
     body: JSON.stringify({ user_id: userId, updates }),
-  })
+  });
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Failed to update user')
+    const error = await response.json();
+    throw new Error(error.error || "Failed to update user");
   }
 
-  return response.json()
+  return response.json();
 }
 
 /**
  * Delete user (Admin only)
  */
 export async function deleteUser(userId: string) {
-  const response = await authenticatedFetch('/api/admin/users', {
-    method: 'DELETE',
+  const response = await authenticatedFetch("/api/admin/users", {
+    method: "DELETE",
     body: JSON.stringify({ user_id: userId }),
-  })
+  });
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Failed to delete user')
+    const error = await response.json();
+    throw new Error(error.error || "Failed to delete user");
   }
 
-  return response.json()
+  return response.json();
 }
 
 /**
@@ -101,36 +106,36 @@ export async function deleteUser(userId: string) {
  */
 export async function setUserRole(
   targetUserId: string,
-  role: 'admin' | 'provider' | 'customer'
+  role: "admin" | "provider" | "customer"
 ) {
-  const response = await authenticatedFetch('/api/admin/set-role', {
-    method: 'POST',
+  const response = await authenticatedFetch("/api/admin/set-role", {
+    method: "POST",
     body: JSON.stringify({ target_user_id: targetUserId, role }),
-  })
+  });
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Failed to set user role')
+    const error = await response.json();
+    throw new Error(error.error || "Failed to set user role");
   }
 
-  return response.json()
+  return response.json();
 }
 
 /**
  * Call a protected admin endpoint
  */
 export async function callProtectedAdminRoute(data: any) {
-  const response = await authenticatedFetch('/api/admin/some-protected', {
-    method: 'POST',
+  const response = await authenticatedFetch("/api/admin/some-protected", {
+    method: "POST",
     body: JSON.stringify(data),
-  })
+  });
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Admin operation failed')
+    const error = await response.json();
+    throw new Error(error.error || "Admin operation failed");
   }
 
-  return response.json()
+  return response.json();
 }
 
 // ====================================================
@@ -142,21 +147,21 @@ export async function callProtectedAdminRoute(data: any) {
  */
 export async function sendOtp(
   userId: string,
-  purpose: 'login' | 'verify_email' | 'reset_password',
+  purpose: "login" | "verify_email" | "reset_password",
   email?: string
 ) {
-  const response = await fetch('/api/auth/send-otp', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/auth/send-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId, purpose, email }),
-  })
+  });
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Failed to send OTP')
+    const error = await response.json();
+    throw new Error(error.error || "Failed to send OTP");
   }
 
-  return response.json()
+  return response.json();
 }
 
 /**
@@ -164,21 +169,21 @@ export async function sendOtp(
  */
 export async function verifyOtp(
   userId: string,
-  purpose: 'login' | 'verify_email' | 'reset_password',
+  purpose: "login" | "verify_email" | "reset_password",
   code: string
 ) {
-  const response = await fetch('/api/auth/verify-otp', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/auth/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId, purpose, code }),
-  })
+  });
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Failed to verify OTP')
+    const error = await response.json();
+    throw new Error(error.error || "Failed to verify OTP");
   }
 
-  return response.json()
+  return response.json();
 }
 
 // ====================================================

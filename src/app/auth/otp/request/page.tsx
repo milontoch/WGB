@@ -1,54 +1,56 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useAuth } from '@/contexts/auth-context'
-import Link from 'next/link'
-import { Container } from '@/components/container'
+import { useState } from "react";
+import { useAuth } from "@/contexts/auth-context";
+import Link from "next/link";
+import { Container } from "@/components/container";
 
 export default function RequestOtpPage() {
-  const { user } = useAuth()
-  const [email, setEmail] = useState('')
-  const [userId, setUserId] = useState('')
-  const [purpose, setPurpose] = useState<'login' | 'verify_email' | 'reset_password'>('login')
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [devCode, setDevCode] = useState('')
+  const { user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
+  const [purpose, setPurpose] = useState<
+    "login" | "verify_email" | "reset_password"
+  >("login");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [devCode, setDevCode] = useState("");
 
   async function handleRequest(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    setMessage('')
-    setDevCode('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setMessage("");
+    setDevCode("");
 
     try {
-      const response = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          user_id: userId || user?.id, 
-          purpose, 
-          email 
-        })
-      })
+      const response = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: userId || user?.id,
+          purpose,
+          email,
+        }),
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to send OTP')
+        throw new Error(data.error || "Failed to send OTP");
       }
 
-      setMessage(data.message || 'OTP sent successfully!')
-      
+      setMessage(data.message || "OTP sent successfully!");
+
       // Show dev code in development mode
       if (data.dev_code) {
-        setDevCode(data.dev_code)
+        setDevCode(data.dev_code);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to send OTP')
+      setError(err.message || "Failed to send OTP");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -91,7 +93,10 @@ export default function RequestOtpPage() {
               {/* User ID (optional if logged in) */}
               {!user && (
                 <div>
-                  <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="userId"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     User ID <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -109,7 +114,10 @@ export default function RequestOtpPage() {
 
               {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Email Address
                 </label>
                 <input
@@ -128,7 +136,10 @@ export default function RequestOtpPage() {
 
               {/* Purpose */}
               <div>
-                <label htmlFor="purpose" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="purpose"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Purpose <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -151,19 +162,19 @@ export default function RequestOtpPage() {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Sending...' : 'Send OTP'}
+                {loading ? "Sending..." : "Send OTP"}
               </button>
             </form>
 
             {/* Links */}
             <div className="mt-6 text-center space-y-2">
-              <Link 
+              <Link
                 href="/auth/otp/verify"
                 className="block text-primary hover:text-primary/80 font-medium"
               >
                 Already have a code? Verify it here
               </Link>
-              <Link 
+              <Link
                 href="/auth/login"
                 className="block text-gray-600 hover:text-gray-900"
               >
@@ -181,5 +192,5 @@ export default function RequestOtpPage() {
         </div>
       </Container>
     </div>
-  )
+  );
 }
