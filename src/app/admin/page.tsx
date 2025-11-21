@@ -1,153 +1,187 @@
-import Link from "next/link";
-import { Container } from "@/components/container";
+/**
+ * Admin Dashboard Page
+ * Shows stats and quick actions
+ */
 
-export default function AdminPage() {
-  const stats = [
-    { label: "Total Bookings", value: "156", icon: "📅" },
-    { label: "Active Services", value: "12", icon: "💅" },
-    { label: "Products", value: "48", icon: "🛍️" },
-    { label: "Revenue (MTD)", value: "$12,450", icon: "💰" },
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ErrorMessage } from "@/components/ui/error";
+import { LoadingSpinner } from "@/components/ui/loading";
+
+interface DashboardStats {
+  todayBookings: number;
+  weekBookings: number;
+  totalServices: number;
+  activeStaff: number;
+  pendingBookings: number;
+}
+
+export default function AdminDashboardPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch("/api/admin/dashboard/stats");
+        if (!res.ok) throw new Error("Failed to fetch stats");
+
+        const data = await res.json();
+        setStats(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-12">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <ErrorMessage message={error} />;
+  }
+
+  const statCards = [
+    {
+      label: "Today's Bookings",
+      value: stats?.todayBookings || 0,
+      bgColor: "bg-pink-50",
+      textColor: "text-pink-600",
+    },
+    {
+      label: "This Week",
+      value: stats?.weekBookings || 0,
+      bgColor: "bg-purple-50",
+      textColor: "text-purple-600",
+    },
+    {
+      label: "Active Services",
+      value: stats?.totalServices || 0,
+      bgColor: "bg-blue-50",
+      textColor: "text-blue-600",
+    },
+    {
+      label: "Active Staff",
+      value: stats?.activeStaff || 0,
+      bgColor: "bg-green-50",
+      textColor: "text-green-600",
+    },
   ];
 
-  const quickLinks = [
+  const quickActions = [
     {
-      title: "Manage Services",
-      description: "View, add, or edit beauty services",
-      href: "/admin/services",
-      icon: "💆",
+      title: "Add Service",
+      description: "Create a new beauty service",
+      href: "/admin/services/new",
+      icon: "✨",
     },
     {
-      title: "Manage Bookings",
-      description: "View and manage customer appointments",
+      title: "View Bookings",
+      description: "Manage customer appointments",
       href: "/admin/bookings",
-      icon: "📋",
-    },
-    {
-      title: "Manage Products",
-      description: "Manage your product inventory",
-      href: "/admin/products",
-      icon: "🌸",
+      icon: "📅",
     },
   ];
 
   return (
-    <div className="pt-16 bg-gray-50 min-h-screen">
+    <div>
       {/* Header */}
-      <section className="bg-gradient-to-br from-pink-50 to-purple-50 py-16 border-b border-gray-200">
-        <Container>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            Admin Dashboard
-          </h1>
-          <p className="text-xl text-gray-600">
-            Manage your beauty services business
-          </p>
-        </Container>
-      </section>
+      <div className="mb-8">
+        <h1 className="font-serif text-4xl text-gray-900 mb-2">Dashboard</h1>
+        <p className="text-gray-600">Welcome to your admin panel</p>
+      </div>
 
-      {/* Stats */}
-      <section className="py-12">
-        <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl">{stat.icon}</span>
-                </div>
-                <p className="text-3xl font-bold text-gray-900 mb-1">
-                  {stat.value}
-                </p>
-                <p className="text-sm text-gray-600">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Quick Links */}
-      <section className="py-12">
-        <Container>
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">
-            Quick Actions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {quickLinks.map((link, index) => (
-              <Link
-                key={index}
-                href={link.href}
-                className="bg-white p-8 rounded-xl border border-gray-200 hover:border-primary hover:shadow-md transition-all group"
-              >
-                <div className="text-5xl mb-4">{link.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors">
-                  {link.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{link.description}</p>
-                <span className="inline-flex items-center text-primary font-medium">
-                  Manage
-                  <svg
-                    className="ml-2 h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </span>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Recent Activity */}
-      <section className="py-12">
-        <Container>
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">
-            Recent Activity
-          </h2>
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="space-y-4">
-              {[
-                {
-                  action: "New booking",
-                  detail: "Haircut by Sarah Johnson",
-                  time: "5 min ago",
-                },
-                {
-                  action: "Product sold",
-                  detail: "Luxury Face Serum x2",
-                  time: "1 hour ago",
-                },
-                {
-                  action: "Booking confirmed",
-                  detail: "Bridal Makeup - Emma Watson",
-                  time: "2 hours ago",
-                },
-              ].map((activity, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0"
-                >
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {activity.action}
-                    </p>
-                    <p className="text-sm text-gray-600">{activity.detail}</p>
-                  </div>
-                  <span className="text-sm text-gray-500">{activity.time}</span>
-                </div>
-              ))}
+      {/* Pending Bookings Alert */}
+      {stats && stats.pendingBookings > 0 && (
+        <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">⚠️</span>
+            <div>
+              <p className="font-medium text-yellow-900">
+                {stats.pendingBookings} pending booking
+                {stats.pendingBookings !== 1 ? "s" : ""}
+              </p>
+              <p className="text-sm text-yellow-700">
+                Review and confirm customer appointments
+              </p>
             </div>
+            <Link
+              href="/admin/bookings"
+              className="ml-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+            >
+              View Bookings
+            </Link>
           </div>
-        </Container>
-      </section>
+        </div>
+      )}
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {statCards.map((stat, index) => (
+          <div
+            key={index}
+            className={`${stat.bgColor} rounded-xl p-6 border border-gray-200`}
+          >
+            <p className="text-sm font-medium text-gray-600 mb-2">
+              {stat.label}
+            </p>
+            <p className={`text-4xl font-bold ${stat.textColor}`}>
+              {stat.value}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick Actions */}
+      <div>
+        <h2 className="font-serif text-2xl text-gray-900 mb-4">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {quickActions.map((action, index) => (
+            <Link
+              key={index}
+              href={action.href}
+              className="bg-white rounded-xl p-6 border border-gray-200 hover:border-pink-300 hover:shadow-md transition-all group"
+            >
+              <div className="flex items-start gap-4">
+                <span className="text-4xl">{action.icon}</span>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-pink-600 transition-colors">
+                    {action.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">{action.description}</p>
+                </div>
+                <svg
+                  className="w-5 h-5 text-gray-400 group-hover:text-pink-600 transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

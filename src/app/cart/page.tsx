@@ -1,53 +1,148 @@
-import Link from "next/link";
-import { Container } from "@/components/container";
+/**
+ * Shopping Cart Page
+ * Displays cart items with quantity management and checkout
+ */
 
-// Placeholder cart data
-const CART_ITEMS = [
-  {
-    id: "1",
-    name: "Luxury Face Serum",
-    price: 89.99,
-    quantity: 1,
-    image: "🌸",
-  },
-  {
-    id: "2",
-    name: "Silk Hair Mask",
-    price: 45.0,
-    quantity: 2,
-    image: "🌸",
-  },
-];
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { Container } from '@/components/container';
+import { LoadingSpinner } from '@/components/ui/loading';
+import { ErrorMessage } from '@/components/ui/error';
+
+interface CartItem {
+  id: string;
+  product_id: string;
+  quantity: number;
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    discount_price: number | null;
+    image_url: string | null;
+    stock: number;
+    sku: string | null;
+  };
+}
+
+interface CartData {
+  cart: CartItem[];
+  subtotal: number;
+  discount: number;
+  total: number;
+  itemCount: number;
+}
 
 export default function CartPage() {
-  const subtotal = CART_ITEMS.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const shipping = 10.0;
-  const total = subtotal + shipping;
+  const router = useRouter();
+  const [cartData, setCartData] = useState<CartData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [updatingItems, setUpdatingItems] = useState<Set<string>>(new Set());
 
-  return (
-    <div className="pt-16">
-      {/* Header */}
-      <section className="bg-gradient-to-br from-pink-50 to-purple-50 py-16">
-        <Container>
-          <div className="text-center">
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">
-              Shopping Cart
-            </h1>
-            <p className="text-xl text-gray-600">
-              Review your items before checkout
-            </p>
-          </div>
-        </Container>
-      </section>
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
-      {/* Cart Content */}
-      <section className="py-16 bg-white">
+  const fetchCart = async () => {
+    try {
+      const res = await fetch('/api/cart');
+      
+      if (!res.ok) {
+        if (res.status === 401) {
+          router.push('/auth/login?redirect=/cart');
+          return;
+        }
+        throw new Error('Failed to load cart');
+      }
+
+      const data = await res.json();
+      setCartData(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateQuantity = async (itemId: string, newQuantity: number) => {
+    if (newQuantity < 1) return;
+
+    setUpdatingItems((prev) => new Set(prev).add(itemId));
+
+    try {
+      const res = await fetch(`/api/cart/${itemId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to update quantity');
+      }
+
+      await fetchCart();
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setUpdatingItems((prev) => {
+        const next = new Set(prev);
+        next.delete(itemId);
+        return next;
+      });
+    }
+  };
+
+  const removeItem = async (itemId: string) => {
+    if (!confirm('Remove this item from cart?')) return;
+
+    setUpdatingItems((prev) => new Set(prev).add(itemId));
+
+    try {
+      const res = await fetch(`/api/cart/${itemId}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to remove item');
+      }
+
+      await fetchCart();
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setUpdatingItems((prev) => {
+        const next = new Set(prev);
+        next.delete(itemId);
+        return next;
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="pt-16 min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="pt-16 min-h-screen flex items-center justify-center">
+        <ErrorMessage message={error} />
+      </div>
+    );
+  }
+
+  if (!cartData || cartData.cart.length === 0) {
+    return (
+      <div className="pt-16 bg-gray-50 min-h-screen">
         <Container>
-          {CART_ITEMS.length === 0 ? (
-            <div className="text-center py-16">
+          <div className="py-16 text-center">
               <div className="text-6xl mb-4">🛒</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Your cart is empty

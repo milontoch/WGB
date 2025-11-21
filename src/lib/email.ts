@@ -203,6 +203,165 @@ export async function sendWelcomeEmail(to: string, name: string) {
 }
 
 /**
+ * Send booking confirmation email
+ */
+export async function sendBookingConfirmationEmail({
+  to,
+  customerName,
+  serviceName,
+  staffName,
+  date,
+  time,
+  price,
+  notes,
+  bookingId,
+}: {
+  to: string;
+  customerName: string;
+  serviceName: string;
+  staffName: string;
+  date: string;
+  time: string;
+  price: number;
+  notes: string;
+  bookingId: string;
+}) {
+  const transporter = getTransporter();
+
+  const info = await transporter.sendMail({
+    from: FROM_EMAIL,
+    to,
+    subject: `Booking Confirmed - ${serviceName}`,
+    text: `Hi ${customerName},\n\nYour appointment has been confirmed!\n\nService: ${serviceName}\nWith: ${staffName}\nDate: ${date}\nTime: ${time}\nPrice: $${price.toFixed(
+      2
+    )}\n${
+      notes ? `\nNotes: ${notes}` : ""
+    }\n\nBooking ID: ${bookingId}\n\nWe look forward to seeing you!\n\nBest regards,\nBeauty Services Team`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Booking Confirmation</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #fafafa;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fafafa; padding: 40px 20px;">
+            <tr>
+              <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                  
+                  <!-- Header -->
+                  <tr>
+                    <td style="background: linear-gradient(135deg, #fce7f3 0%, #f9a8d4 100%); padding: 40px 30px; text-align: center;">
+                      <h1 style="color: #831843; margin: 0; font-size: 28px; font-family: 'Playfair Display', serif;">Booking Confirmed!</h1>
+                    </td>
+                  </tr>
+                  
+                  <!-- Body -->
+                  <tr>
+                    <td style="padding: 40px 30px;">
+                      <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px;">
+                        Hi ${customerName},
+                      </p>
+                      
+                      <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 30px;">
+                        We're excited to confirm your appointment!
+                      </p>
+                      
+                      <!-- Booking Details Card -->
+                      <div style="background-color: #fce7f3; border-radius: 8px; padding: 24px; margin-bottom: 30px;">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td style="padding: 8px 0;">
+                              <strong style="color: #831843; font-size: 14px;">Service:</strong>
+                            </td>
+                            <td style="padding: 8px 0; text-align: right;">
+                              <span style="color: #374151; font-size: 16px;">${serviceName}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0;">
+                              <strong style="color: #831843; font-size: 14px;">With:</strong>
+                            </td>
+                            <td style="padding: 8px 0; text-align: right;">
+                              <span style="color: #374151; font-size: 16px;">${staffName}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0;">
+                              <strong style="color: #831843; font-size: 14px;">Date:</strong>
+                            </td>
+                            <td style="padding: 8px 0; text-align: right;">
+                              <span style="color: #374151; font-size: 16px;">${date}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0;">
+                              <strong style="color: #831843; font-size: 14px;">Time:</strong>
+                            </td>
+                            <td style="padding: 8px 0; text-align: right;">
+                              <span style="color: #374151; font-size: 16px;">${time}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; border-top: 1px solid #f9a8d4;">
+                              <strong style="color: #831843; font-size: 14px;">Price:</strong>
+                            </td>
+                            <td style="padding: 8px 0; text-align: right; border-top: 1px solid #f9a8d4;">
+                              <span style="color: #831843; font-size: 18px; font-weight: bold;">$${price.toFixed(
+                                2
+                              )}</span>
+                            </td>
+                          </tr>
+                          ${
+                            notes
+                              ? `
+                          <tr>
+                            <td colspan="2" style="padding: 16px 0 0 0;">
+                              <strong style="color: #831843; font-size: 14px; display: block; margin-bottom: 8px;">Notes:</strong>
+                              <p style="color: #6b7280; font-size: 14px; margin: 0; font-style: italic;">${notes}</p>
+                            </td>
+                          </tr>
+                          `
+                              : ""
+                          }
+                        </table>
+                      </div>
+                      
+                      <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 20px 0;">
+                        <strong>Booking Reference:</strong> ${bookingId}
+                      </p>
+                      
+                      <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0 0;">
+                        Need to reschedule? Log in to your account to manage your bookings.
+                      </p>
+                    </td>
+                  </tr>
+                  
+                  <!-- Footer -->
+                  <tr>
+                    <td style="background-color: #fafafa; padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                      <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                        © ${new Date().getFullYear()} Beauty Services. All rights reserved.
+                      </p>
+                    </td>
+                  </tr>
+                  
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+      </html>
+    `,
+  });
+
+  console.log("Booking confirmation email sent:", info.messageId);
+  return info;
+}
+
+/**
  * Test email configuration
  * Run this to verify SMTP settings are working
  */

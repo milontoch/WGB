@@ -1,0 +1,258 @@
+Below is **everything you need**:
+
+- Step-by-step Postmark setup
+- VS Code prompts for your LLM (so it can generate the code for you)
+- Ready-to-use templates
+- Folder structure
+- API route examples
+
+This is the full setup normally used in professional Next.js/Supabase production apps.
+
+---
+
+# ✅ **PHASE 1 — Create Postmark Account & Server**
+
+### **Step 1 — Create Postmark Account**
+
+Go to: _postmarkapp.com → Sign Up_
+
+### **Step 2 — Create a Server**
+
+- Name: **prod-server**
+- Server Type: **Transactional**
+  Postmark will give you a **Server API Token** → copy it.
+
+### **Step 3 — Create/Verify Sending Domain**
+
+- Add your domain (e.g., yourfriendstudio.com)
+- Add the 3 DNS records:
+
+  - SPF
+  - DKIM
+  - Return-Path
+
+Once verified → you're ready to send email.
+
+---
+
+# ✅ **PHASE 2 — Add Environment Variables to Next.js**
+
+In your `.env.local` add:
+
+```env
+POSTMARK_SERVER_TOKEN="your-server-token-here"
+FROM_EMAIL="no-reply@yourdomain.com"
+```
+
+---
+
+# 🔥 VS CODE PROMPT (PHASE 2: ENV SETUP)
+
+Copy this into your VS Code AI assistant:
+
+```
+You are helping me set up Postmark in a Next.js project.
+Generate the .env.local entries needed for Postmark integration using the following keys:
+
+- POSTMARK_SERVER_TOKEN
+- FROM_EMAIL
+
+Make sure they follow Next.js environment variable naming rules.
+Provide them in copy-paste format.
+
+Do NOT include explanations or comments, only the environment variables.
+```
+
+---
+
+# ✅ **PHASE 3 — Install Postmark SDK**
+
+Run:
+
+```bash
+npm install postmark
+```
+
+---
+
+# 🔥 VS CODE PROMPT (PHASE 3: SDK INSTALL)
+
+```
+Write the exact code snippet needed to install Postmark into a Next.js project using npm.
+Give only the command, nothing else.
+```
+
+---
+
+# ✅ **PHASE 4 — Create Email Utility File**
+
+Create: `lib/email.ts`
+
+Paste this:
+
+```ts
+import * as postmark from "postmark";
+
+const client = new postmark.ServerClient(process.env.POSTMARK_SERVER_TOKEN!);
+
+export async function sendEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string;
+  subject: string;
+  html: string;
+}) {
+  return client.sendEmail({
+    From: process.env.FROM_EMAIL!,
+    To: to,
+    Subject: subject,
+    HtmlBody: html,
+    MessageStream: "outbound",
+  });
+}
+```
+
+---
+
+# 🔥 VS CODE PROMPT (PHASE 4: EMAIL UTILITY FILE)
+
+```
+Generate a TypeScript utility file at lib/email.ts for sending transactional emails using Postmark within a Next.js 14 app (App Router).
+The utility must export a sendEmail() function with {to, subject, html}.
+It should initialize a Postmark ServerClient using POSTMARK_SERVER_TOKEN and send emails through the default outbound stream.
+Provide only valid, production-ready code.
+```
+
+---
+
+# ✅ **PHASE 5 — Create API Routes**
+
+### 1️⃣ Booking Confirmation Email
+
+Create:
+
+`app/api/email/booking/route.ts`
+
+```ts
+import { sendEmail } from "@/lib/email";
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { customerEmail, customerName, serviceName, date } = body;
+
+    await sendEmail({
+      to: customerEmail,
+      subject: `Your booking for ${serviceName}`,
+      html: `
+        <h2>Booking Confirmed</h2>
+        <p>Hi ${customerName},</p>
+        <p>Your appointment for <strong>${serviceName}</strong> has been confirmed.</p>
+        <p>Date & Time: ${date}</p>
+        <p>Thank you for choosing us!</p>
+      `,
+    });
+
+    return Response.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Failed to send email" }, { status: 500 });
+  }
+}
+```
+
+---
+
+# 🔥 VS CODE PROMPT (PHASE 5: BOOKING EMAIL ROUTE)
+
+```
+Generate a Next.js App Router API route at app/api/email/booking/route.ts.
+The route should:
+- Accept POST requests
+- Parse JSON body {customerEmail, customerName, serviceName, date}
+- Call sendEmail() from "@/lib/email"
+- Send a booking confirmation HTML email
+- Return { success: true } on success or an error response on failure.
+
+Provide only the code file.
+```
+
+---
+
+# ✅ **PHASE 6 — Order Receipt Email (eCommerce)**
+
+`app/api/email/order/route.ts`
+
+```ts
+import { sendEmail } from "@/lib/email";
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { email, orderId, amount, items } = body;
+
+    const itemsHtml = items
+      .map((i: any) => `<li>${i.name} — ₦${i.price}</li>`)
+      .join("");
+
+    await sendEmail({
+      to: email,
+      subject: `Order Receipt #${orderId}`,
+      html: `
+        <h2>Your Order Receipt</h2>
+        <p>Order ID: <strong>${orderId}</strong></p>
+        <p>Total: ₦${amount}</p>
+        <ul>${itemsHtml}</ul>
+        <p>Thank you for your purchase!</p>
+      `,
+    });
+
+    return Response.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Failed to send email" }, { status: 500 });
+  }
+}
+```
+
+---
+
+# 🔥 VS CODE PROMPT (PHASE 6 — ORDER EMAIL ROUTE)
+
+```
+Generate a Next.js API route at app/api/email/order/route.ts.
+Route should:
+- handle POST
+- read {email, orderId, amount, items}
+- build an HTML email listing purchased items
+- send email using sendEmail() from "@/lib/email"
+Provide only the code.
+```
+
+---
+
+# 🚀 **YOU ARE NOW FULLY SET UP**
+
+You now have:
+
+✔️ Postmark configured
+✔️ Env variables
+✔️ Email utility
+✔️ Booking email route
+✔️ Order email route
+✔️ LLM prompts for VS Code
+
+---
+
+# If you want, I can also generate:
+
+📦 **Ready-made email templates (beauty/spa style)**
+🎨 Tailwind email templates
+🛒 eCommerce order confirmation style
+📅 booking reminder emails
+💅 branded templates for your friend's studio
+
+Just tell me:
+➡️ **“Generate the spa email templates”**
