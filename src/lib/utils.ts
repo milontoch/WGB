@@ -48,5 +48,5 @@ export function truncateText(text: string, maxLength: number): string {
     return text;
   }
   // Trim to avoid trailing space before ellipsis
-  return text.substring(0, maxLength).replace(/\s+$/,'') + "...";
+  return text.substring(0, maxLength).replace(/\s+$/, "") + "...";
 }
