@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/container";
 import { LoadingSpinner } from "@/components/ui/loading";
@@ -35,11 +35,7 @@ export default function CheckoutPage() {
     state: "",
   });
 
-  useEffect(() => {
-    fetchCart();
-  }, []);
-
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     try {
       const res = await fetch("/api/cart");
 
@@ -65,7 +61,11 @@ export default function CheckoutPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

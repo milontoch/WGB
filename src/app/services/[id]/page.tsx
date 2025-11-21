@@ -97,7 +97,7 @@ export default function ServiceDetailPage({ params }: ServiceDetailPageProps) {
 
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  What's Included:
+                  What&apos;s Included:
                 </h3>
                 <ul className="space-y-2">
                   {service.includes.map((item: string, index: number) => (

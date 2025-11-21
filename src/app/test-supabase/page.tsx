@@ -29,7 +29,7 @@ export default async function TestSupabasePage() {
               <p className="text-red-800 font-medium">❌ Connection Error</p>
               <p className="text-red-600 text-sm mt-2">{error}</p>
               <p className="text-red-600 text-sm mt-4">
-                Make sure you've:
+                Make sure you&apos;ve:
                 <br />
                 1. Created the tables in Supabase using the SQL schema
                 <br />

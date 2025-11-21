@@ -5,7 +5,7 @@
  * View email logs, send promotional emails, and monitor notification status
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Container } from "@/components/container";
 
 interface EmailLog {
@@ -53,8 +53,8 @@ export default function NotificationsPage() {
   const [targetAudience, setTargetAudience] = useState("all");
   const [sending, setSending] = useState(false);
 
-  // Fetch email logs
-  const fetchEmailLogs = async () => {
+  // Fetch email logs (memoized)
+  const fetchEmailLogs = useCallback(async () => {
     setLoading(true);
     setError("");
 
@@ -80,7 +80,7 @@ export default function NotificationsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterType, filterStatus]);
 
   // Send promotional email
   const sendPromotionalEmail = async () => {
@@ -171,7 +171,7 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     fetchEmailLogs();
-  }, [filterType, filterStatus]);
+  }, [fetchEmailLogs]);
 
   return (
     <Container className="py-12">

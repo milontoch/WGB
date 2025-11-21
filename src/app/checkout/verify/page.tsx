@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Container } from "@/components/container";
 import { LoadingSpinner } from "@/components/ui/loading";
@@ -21,17 +21,7 @@ export default function VerifyPaymentPage() {
   const [message, setMessage] = useState("Verifying your payment...");
   const [orderId, setOrderId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!reference) {
-      setStatus("error");
-      setMessage("Payment reference not found");
-      return;
-    }
-
-    verifyPayment();
-  }, [reference]);
-
-  const verifyPayment = async () => {
+  const verifyPayment = useCallback(async () => {
     try {
       const res = await fetch(`/api/payment/verify?reference=${reference}`);
       const data = await res.json();
@@ -52,7 +42,16 @@ export default function VerifyPaymentPage() {
       setStatus("error");
       setMessage(err.message);
     }
-  };
+  }, [reference, router]);
+
+  useEffect(() => {
+    if (!reference) {
+      setStatus("error");
+      setMessage("Payment reference not found");
+      return;
+    }
+    verifyPayment();
+  }, [reference, verifyPayment]);
 
   return (
     <div className="pt-16 bg-gray-50 min-h-screen">

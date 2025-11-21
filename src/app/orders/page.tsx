@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/container";
 import { LoadingSpinner } from "@/components/ui/loading";
@@ -45,11 +45,7 @@ export default function OrdersPage() {
   const [error, setError] = useState("");
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       const res = await fetch("/api/orders");
 
@@ -68,7 +64,11 @@ export default function OrdersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const toggleOrderDetails = (orderId: string) => {
     setExpandedOrders((prev) => {
