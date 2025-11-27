@@ -4,7 +4,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export interface AuthResult {
   authenticated: boolean;
@@ -21,7 +21,7 @@ export interface AuthResult {
  */
 export async function requireAuth(request: NextRequest): Promise<AuthResult> {
   try {
-    const supabase = await createServerClient();
+    const supabase = await createClient();
     const {
       data: { user },
       error,
@@ -87,7 +87,7 @@ export async function requireRole(
  */
 export async function getSession(request: NextRequest) {
   try {
-    const supabase = await createServerClient();
+    const supabase = await createClient();
     const {
       data: { session },
       error,

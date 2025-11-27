@@ -4,7 +4,7 @@ import { requireAuthFromRequest } from "@/lib/auth-helpers";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Require authentication
@@ -17,7 +17,7 @@ export async function PATCH(
     }
 
     const userId = authResult.user.id;
-    const bookingId = params.id;
+    const { id: bookingId } = await params;
 
     // Verify booking exists and belongs to user
     const { data: booking, error: fetchError } = await supabaseAdmin

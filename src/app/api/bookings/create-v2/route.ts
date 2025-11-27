@@ -23,7 +23,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import {
   createBooking,
   getServiceById,
@@ -37,7 +37,7 @@ import { isValidBookingDate } from "@/lib/services/time-slot-service";
 export async function POST(request: NextRequest) {
   try {
     // 1. AUTHENTICATION CHECK
-    const supabase = await createServerClient();
+    const supabase = await createClient();
     const {
       data: { user },
       error: authError,

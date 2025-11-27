@@ -9,18 +9,19 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAuth(request);
 
     const body = await request.json();
     const supabase = await createClient();
+    const { id } = await params;
 
     const { data, error } = await supabase
       .from("products")
       .update(body)
-      .eq("id", params.id)
+      .eq("id", id)
       .select()
       .single();
 
@@ -43,17 +44,18 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAuth(request);
 
     const supabase = await createClient();
+    const { id } = await params;
 
     const { error } = await supabase
       .from("products")
       .delete()
-      .eq("id", params.id);
+      .eq("id", id);
 
     if (error) throw error;
 

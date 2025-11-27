@@ -15,7 +15,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 // PATCH update cart item quantity
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await requireAuth(request);
@@ -23,7 +23,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const cartItemId = params.id;
+    const { id: cartItemId } = await params;
     const body = await request.json();
     const { quantity } = body;
 
@@ -80,7 +80,7 @@ export async function PATCH(
 // DELETE remove cart item
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await requireAuth(request);
@@ -88,7 +88,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const cartItemId = params.id;
+    const { id: cartItemId } = await params;
 
     // Verify ownership
     const { data: cartItem } = await supabaseAdmin

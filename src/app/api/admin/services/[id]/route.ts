@@ -10,7 +10,7 @@ import { requireAuth } from "@/lib/middleware/auth";
 // PATCH - Update service
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await requireAuth(request);
@@ -18,7 +18,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const serviceId = params.id;
+    const { id: serviceId } = await params;
     const body = await request.json();
 
     // Update service
@@ -50,7 +50,7 @@ export async function PATCH(
 // DELETE - Delete service
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await requireAuth(request);
@@ -58,7 +58,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const serviceId = params.id;
+    const { id: serviceId } = await params;
 
     // Delete service
     const { error } = await supabaseAdmin
