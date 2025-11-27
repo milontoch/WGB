@@ -91,8 +91,10 @@ export const authClient = {
       .eq("id", user.id)
       .single();
 
-    if (profileError) {
-      console.error("Error fetching profile:", profileError);
+    // If profile fetch fails or returns empty, avoid noisy logging and return minimal user
+    if (profileError != null) {
+      // Log safely without relying on error shape (may be {})
+      console.warn("Profile not available for user:", user.id);
       return {
         id: user.id,
         email: user.email || "",
@@ -185,8 +187,8 @@ export const authServer = {
       .eq("id", user.id)
       .single();
 
-    if (profileError) {
-      console.error("Error fetching profile:", profileError);
+    if (profileError != null) {
+      console.warn("Profile not available for user:", user.id);
       return {
         id: user.id,
         email: user.email || "",

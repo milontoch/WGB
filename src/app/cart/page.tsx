@@ -266,15 +266,26 @@ export default function CartPage() {
                     <span className="text-primary">₦{total.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
                   </div>
                 </div>
-                <button className="w-full px-8 py-4 bg-primary text-white font-semibold rounded-md hover:bg-primary/90 transition-colors shadow-lg mb-4">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push('/checkout');
+                  }}
+                  type="button"
+                  className="w-full px-8 py-4 bg-primary text-white font-semibold rounded-md hover:bg-primary/90 transition-colors shadow-lg mb-4"
+                >
                   Proceed to Checkout
                 </button>
-                <Link
-                  href="/shop"
-                  className="block text-center text-primary hover:text-primary/80 transition-colors text-sm font-medium"
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push('/shop');
+                  }}
+                  type="button"
+                  className="w-full text-center text-primary hover:text-primary/80 transition-colors text-sm font-medium bg-transparent border-none cursor-pointer"
                 >
                   Continue Shopping
-                </Link>
+                </button>
               </div>
             </div>
           </div>

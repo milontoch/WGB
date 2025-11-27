@@ -54,6 +54,11 @@ export function AddToCartButton({
         `Added ${quantity} ${quantity === 1 ? "item" : "items"} to cart!`
       );
 
+      // Notify the app that the cart has been updated
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("cart:updated"));
+      }
+
       // Reset success message after 3 seconds
       setTimeout(() => setSuccess(""), 3000);
     } catch (err: any) {
@@ -80,6 +85,11 @@ export function AddToCartButton({
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to add to cart");
+      }
+
+      // Notify the app that the cart has been updated
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("cart:updated"));
       }
 
       // Redirect to cart

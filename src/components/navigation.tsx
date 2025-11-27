@@ -1,12 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth-context";
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut, loading, isAdmin } = useAuth();
+  const [cartCount, setCartCount] = useState(0);
+
+  // Fetch cart count when user changes and on cart updates
+  useEffect(() => {
+    let active = true;
+
+    async function fetchCount() {
+      try {
+        if (!user) {
+          if (active) setCartCount(0);
+          return;
+        }
+        const res = await fetch("/api/cart", { cache: "no-store" });
+        if (!res.ok) {
+          if (active) setCartCount(0);
+          return;
+        }
+        const data = await res.json();
+        if (active) setCartCount(typeof data.itemCount === "number" ? data.itemCount : 0);
+      } catch {
+        if (active) setCartCount(0);
+      }
+    }
+
+    fetchCount();
+
+    const onCartUpdated = () => fetchCount();
+    if (typeof window !== "undefined") {
+      window.addEventListener("cart:updated", onCartUpdated);
+    }
+    return () => {
+      active = false;
+      if (typeof window !== "undefined") {
+        window.removeEventListener("cart:updated", onCartUpdated);
+      }
+    };
+  }, [user]);
 
   return (
     <nav className="fixed w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
@@ -70,7 +107,7 @@ export function Navigation() {
                 />
               </svg>
               <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full">
-                0
+                {cartCount}
               </span>
             </Link>
 
@@ -112,6 +149,7 @@ export function Navigation() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary hover:bg-gray-100"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               <svg
                 className="h-6 w-6"
