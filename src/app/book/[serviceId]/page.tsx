@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Container } from "@/components/container";
@@ -25,8 +25,9 @@ interface Service {
 export default function BookingPage({
   params,
 }: {
-  params: { serviceId: string };
+  params: Promise<{ serviceId: string }>;
 }) {
+  const { serviceId } = use(params);
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
 
@@ -43,7 +44,7 @@ export default function BookingPage({
   useEffect(() => {
     async function fetchService() {
       try {
-        const res = await fetch(`/api/services/${params.serviceId}`);
+        const res = await fetch(`/api/services/${serviceId}`);
         if (res.ok) {
           const data = await res.json();
           setService(data);
@@ -53,7 +54,7 @@ export default function BookingPage({
       }
     }
     fetchService();
-  }, [params.serviceId]);
+  }, [serviceId]);
 
   // Fetch available slots when date changes
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function BookingPage({
     async function fetchSlots() {
       try {
         const res = await fetch(
-          `/api/bookings/available-slots?date=${selectedDate}&serviceId=${params.serviceId}`
+          `/api/bookings/available-slots?date=${selectedDate}&serviceId=${serviceId}`
         );
         if (res.ok) {
           const data = await res.json();
@@ -76,14 +77,14 @@ export default function BookingPage({
       }
     }
     fetchSlots();
-  }, [selectedDate, params.serviceId]);
+  }, [selectedDate, serviceId]);
 
   // Redirect if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
-      router.push(`/auth/login?redirect=/book/${params.serviceId}`);
+      router.push(`/auth/login?redirect=/book/${serviceId}`);
     }
-  }, [user, authLoading, router, params.serviceId]);
+  }, [user, authLoading, router, serviceId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +104,7 @@ export default function BookingPage({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          service_id: params.serviceId,
+          service_id: serviceId,
           staff_id: selectedSlot.staffId,
           booking_date: selectedDate,
           booking_time: selectedSlot.time,
