@@ -5,15 +5,8 @@ import { requireAuthFromRequest } from "@/lib/auth-helpers";
 export async function GET(request: Request) {
   try {
     // Require authentication
-    const authResult = await requireAuthFromRequest(request);
-    if (!authResult.authenticated || !authResult.user) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
-
-    const userId = authResult.user.id;
+    const user = await requireAuthFromRequest(request);
+    const userId = user.id;
 
     // Fetch user's bookings with service and staff details
     const { data: bookings, error } = await supabaseAdmin

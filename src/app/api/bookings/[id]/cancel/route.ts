@@ -8,15 +8,8 @@ export async function PATCH(
 ) {
   try {
     // Require authentication
-    const authResult = await requireAuthFromRequest(request);
-    if (!authResult.authenticated || !authResult.user) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
-
-    const userId = authResult.user.id;
+    const user = await requireAuthFromRequest(request);
+    const userId = user.id;
     const { id: bookingId } = await params;
 
     // Verify booking exists and belongs to user
