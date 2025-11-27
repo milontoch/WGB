@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Parse query parameters
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const email_type = searchParams.get("email_type") || undefined;
     const status = searchParams.get("status") || undefined;
     const campaign_id = searchParams.get("campaign_id") || undefined;

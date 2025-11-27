@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get query parameters for filtering
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get("status");
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");

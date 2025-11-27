@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 
 interface ServiceDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // Placeholder service data (in real app, fetch from database)
@@ -29,8 +29,9 @@ const SERVICE_DATA: Record<string, any> = {
   },
 };
 
-export default function ServiceDetailPage({ params }: ServiceDetailPageProps) {
-  const service = SERVICE_DATA[params.id] || SERVICE_DATA["1"];
+export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
+  const { id } = await params;
+  const service = SERVICE_DATA[id] || SERVICE_DATA["1"];
 
   return (
     <div className="pt-16">
