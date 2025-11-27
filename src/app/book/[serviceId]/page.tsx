@@ -29,7 +29,7 @@ export default function BookingPage({
 }) {
   const { serviceId } = use(params);
   const router = useRouter();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   const [service, setService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState("");
