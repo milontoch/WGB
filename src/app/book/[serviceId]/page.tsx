@@ -189,7 +189,7 @@ export default function BookingPage({
           {/* Header */}
           <div className="mb-8">
             <Link
-              href={`/services/${params.serviceId}`}
+              href={`/services/${serviceId}`}
               className="text-pink-600 hover:text-pink-700 text-sm mb-2 inline-block"
             >
               ← Back to Service
