@@ -1,7 +1,7 @@
 // Playwright configuration for E2E tests
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || "3000");
 const baseURL = `http://localhost:${PORT}`;
 
 export default defineConfig({

@@ -12,6 +12,10 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  if (!product) {
+    return null;
+  }
+  
   const displayPrice = product.discount_price || product.price;
   const hasDiscount = product.discount_price !== null && product.discount_price < product.price;
   const discountPercent = hasDiscount
