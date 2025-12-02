@@ -4,8 +4,8 @@ import { createClient } from "@supabase/supabase-js";
 // ⚠️ ONLY use this in server-side code (API routes, Server Actions, Server Components)
 // This bypasses Row Level Security (RLS) - use with caution!
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder-service-role-key";
 
 export const supabaseAdmin = createClient(
   supabaseUrl,
