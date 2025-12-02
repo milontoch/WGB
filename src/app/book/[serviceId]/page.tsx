@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import * as React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Container } from "@/components/container";
@@ -25,9 +26,10 @@ interface Service {
 export default function BookingPage({
   params,
 }: {
-  params: { serviceId: string };
+  params: Promise<{ serviceId: string }>;
 }) {
-  const { serviceId } = params;
+  const resolvedParams = React.use(params);
+  const { serviceId } = resolvedParams;
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
