@@ -1,6 +1,7 @@
 // Test helper utilities
 
 import { NextRequest } from "next/server";
+import { vi } from "vitest";
 
 /**
  * Create a mock Next.js request
