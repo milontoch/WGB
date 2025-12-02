@@ -9,10 +9,10 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: serviceId } = params;
+    const { id: serviceId } = await context.params;
 
     // Fetch service from database
     const { data: service, error } = await supabaseAdmin
