@@ -43,6 +43,7 @@ const FEATURED_PRODUCTS = [
     category: "Skincare",
     is_active: true,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: "2",
@@ -56,6 +57,7 @@ const FEATURED_PRODUCTS = [
     category: "Haircare",
     is_active: true,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: "3",
@@ -69,6 +71,7 @@ const FEATURED_PRODUCTS = [
     category: "Skincare",
     is_active: true,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
 ];
 
