@@ -232,7 +232,7 @@ export default function Home() {
                   ))}
                 </div>
                 <p className="text-[#111111]/70 font-light leading-relaxed mb-6">
-                  "Exceptional service and attention to detail. The team truly understands luxury beauty care."
+                  &ldquo;Exceptional service and attention to detail. The team truly understands luxury beauty care.&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-full bg-[#D4B58E]/20 flex items-center justify-center">
