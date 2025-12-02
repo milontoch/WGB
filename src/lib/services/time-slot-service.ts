@@ -218,10 +218,11 @@ export async function getAvailableTimeSlots(
 
         for (const slot of slots) {
           // Check if this slot is already booked
-          const isBooked = staffBookedTimes.has(slot);
+          const slotTime = typeof slot === 'string' ? slot : slot.start_time;
+          const isBooked = staffBookedTimes.has(slotTime);
 
           allSlots.push({
-            time: slot,
+            time: typeof slot === 'string' ? slot : slot.start_time,
             available: !isBooked,
             staffId: staffMember.id,
             staffName: staffMember.name,
