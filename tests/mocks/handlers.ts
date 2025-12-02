@@ -85,7 +85,7 @@ export const handlers = [
 
   // Mock Supabase inserts
   http.post(`${SUPABASE_URL}/rest/v1/bookings`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
     return HttpResponse.json(
       {
         id: "new-booking-id",
@@ -97,7 +97,7 @@ export const handlers = [
   }),
 
   http.post(`${SUPABASE_URL}/rest/v1/orders`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
     return HttpResponse.json(
       {
         id: "new-order-id",
