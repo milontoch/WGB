@@ -5,12 +5,12 @@
 
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Container } from "@/components/container";
 import { LoadingSpinner } from "@/components/ui/loading";
 
-export default function VerifyPaymentPage() {
+function VerifyPaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reference = searchParams.get("reference");
@@ -146,5 +146,26 @@ export default function VerifyPaymentPage() {
         </div>
       </Container>
     </div>
+  );
+}
+
+export default function VerifyPaymentPage() {
+  return (
+    <Suspense fallback={
+      <div className="pt-16 bg-gray-50 min-h-screen">
+        <Container>
+          <div className="py-16">
+            <div className="max-w-md mx-auto bg-white rounded-xl p-8 shadow-lg text-center">
+              <LoadingSpinner />
+              <h2 className="font-serif text-2xl text-gray-900 mt-6 mb-2">
+                Loading...
+              </h2>
+            </div>
+          </div>
+        </Container>
+      </div>
+    }>
+      <VerifyPaymentContent />
+    </Suspense>
   );
 }
