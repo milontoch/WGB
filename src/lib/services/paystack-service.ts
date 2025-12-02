@@ -5,9 +5,7 @@
  */
 
 // Paystack TEST API Key - For production, use environment variable
-const PAYSTACK_SECRET_KEY =
-  process.env.PAYSTACK_SECRET_KEY ||
-  "sk_test_960b5c3231a50fcf197a199715bc39bff47ddb0a";
+const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 const PAYSTACK_BASE_URL = "https://api.paystack.co";
 
 export interface PaystackInitializeResponse {
@@ -65,7 +63,8 @@ export async function initializePayment(
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to initialize payment");
+    console.error('Paystack initialization error:', error);
+    throw new Error(error.message || 'Failed to initialize payment. Please check your Paystack API key.');
   }
 
   return response.json();
@@ -81,6 +80,9 @@ export async function verifyPayment(
     throw new Error("Paystack secret key not configured");
   }
 
+  console.log('Verifying payment with Paystack API:', reference);
+  console.log('Using secret key:', PAYSTACK_SECRET_KEY?.substring(0, 15) + '...');
+
   const response = await fetch(
     `${PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
     {
@@ -91,12 +93,17 @@ export async function verifyPayment(
     }
   );
 
+  const responseData = await response.json();
+  
+  console.log('Paystack API response status:', response.status);
+  console.log('Paystack API response:', JSON.stringify(responseData, null, 2));
+
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to verify payment");
+    console.error('Paystack API error:', responseData);
+    throw new Error(responseData.message || "Failed to verify payment");
   }
 
-  return response.json();
+  return responseData;
 }
 
 /**

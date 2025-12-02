@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface ServiceCardProps {
   id: string;
@@ -7,6 +8,7 @@ interface ServiceCardProps {
   price: number;
   duration: number;
   category?: string;
+  image_url?: string;
 }
 
 export function ServiceCard({
@@ -16,72 +18,48 @@ export function ServiceCard({
   price,
   duration,
   category,
+  image_url,
 }: ServiceCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group">
-      {/* Image Placeholder */}
-      <div className="aspect-video bg-gradient-to-br from-primary/10 to-purple-100 flex items-center justify-center group-hover:scale-105 transition-transform">
-        <span className="text-5xl">💅</span>
+    <div className="group bg-white rounded-[18px] overflow-hidden transition-all duration-300 hover:scale-[1.03] shadow-[0_5px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)]">
+      
+      {/* Image */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#FAF7F2]">
+        {image_url ? (
+          <Image
+            src={image_url}
+            alt={name}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#D4B58E]/10 to-[#D4B58E]/5">
+            <span className="text-6xl opacity-20">💎</span>
+          </div>
+        )}
       </div>
 
       {/* Content */}
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
-            {category && (
-              <span className="inline-block px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
-                {category}
-              </span>
-            )}
-          </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-primary">
-              ${price.toFixed(2)}
-            </p>
-          </div>
+      <div className="p-8 text-center">
+        <h3 className="font-['Poppins'] text-xl font-semibold text-[#111111] mb-3">
+          {name}
+        </h3>
+        
+        <p className="text-[#111111]/70 text-[15px] font-light leading-relaxed mb-4 min-h-[48px]">
+          {description}
+        </p>
+
+        <div className="text-3xl font-semibold text-[#D4B58E] mb-6">
+          ₦{price.toLocaleString('en-NG')}
         </div>
 
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-sm text-gray-500">
-            <svg
-              className="h-4 w-4 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {duration} min
-          </div>
-
-          <Link
-            href={`/services/${id}`}
-            className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-          >
-            View Details
-            <svg
-              className="ml-1 h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </Link>
-        </div>
+        <Link
+          href={`/book/${id}`}
+          className="inline-block w-full px-8 py-4 bg-[#D4B58E] text-white text-sm font-medium tracking-wide rounded-full transition-all duration-300 hover:bg-[#C4A57E] hover:shadow-lg"
+        >
+          BOOK NOW
+        </Link>
       </div>
     </div>
   );

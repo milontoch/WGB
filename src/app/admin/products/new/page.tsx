@@ -175,10 +175,11 @@ export default function NewProductPage() {
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="product-category" className="block text-sm font-semibold text-gray-900 mb-2">
               Category
             </label>
             <select
+              id="product-category"
               value={formData.category}
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })

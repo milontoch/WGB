@@ -25,29 +25,27 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/shop/${product.id}`}
-      className="group block bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300"
+      className="group block bg-white rounded-[18px] overflow-hidden transition-all duration-300 hover:scale-[1.02] shadow-[0_5px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.15)]"
     >
       {/* Product Image */}
-      <div className="relative aspect-square bg-gray-100 overflow-hidden">
+      <div className="relative aspect-square bg-[#FAF7F2] overflow-hidden">
         {product.image_url ? (
           <Image
             src={product.image_url}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover group-hover:scale-110 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
-            <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-            </svg>
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#D4B58E]/10 to-[#D4B58E]/5">
+            <span className="text-6xl opacity-20">🛍️</span>
           </div>
         )}
         
         {/* Discount Badge */}
         {hasDiscount && (
-          <div className="absolute top-3 right-3 bg-pink-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+          <div className="absolute top-4 right-4 bg-[#D4B58E] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
             -{discountPercent}%
           </div>
         )}
@@ -55,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Out of Stock Badge */}
         {product.stock === 0 && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="bg-white text-gray-900 text-sm font-semibold px-4 py-2 rounded-lg">
+            <span className="bg-white text-[#111111] text-sm font-semibold px-5 py-2 rounded-full shadow-xl">
               Out of Stock
             </span>
           </div>
@@ -63,26 +61,26 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Product Info */}
-      <div className="p-4">
+      <div className="p-6 text-center">
         {/* Category */}
         {product.category && (
-          <span className="text-xs text-pink-600 font-medium">
+          <span className="text-xs text-[#D4B58E] font-medium uppercase tracking-wide">
             {product.category}
           </span>
         )}
 
         {/* Product Name */}
-        <h3 className="font-medium text-gray-900 mt-1 line-clamp-2 group-hover:text-pink-600 transition-colors">
+        <h3 className="font-['Poppins'] text-base font-semibold text-[#111111] mt-2 mb-3 line-clamp-2 group-hover:text-[#D4B58E] transition-colors">
           {product.name}
         </h3>
 
         {/* Price */}
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-lg font-bold text-gray-900">
+        <div className="flex items-baseline gap-2 justify-center mb-4">
+          <span className="text-2xl font-bold text-[#D4B58E]">
             ₦{displayPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
           </span>
           {hasDiscount && (
-            <span className="text-sm text-gray-500 line-through">
+            <span className="text-sm text-[#111111]/40 line-through font-light">
               ₦{product.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
             </span>
           )}
@@ -90,10 +88,17 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Stock Indicator */}
         {product.stock > 0 && product.stock <= 10 && (
-          <p className="text-xs text-orange-600 mt-2">
-            Only {product.stock} left in stock!
+          <p className="text-xs text-orange-600 font-medium">
+            Only {product.stock} left!
           </p>
         )}
+        
+        {/* View Button */}
+        <div className="mt-4">
+          <span className="inline-block text-sm text-[#D4B58E] font-medium group-hover:underline">
+            View Details →
+          </span>
+        </div>
       </div>
     </Link>
   );

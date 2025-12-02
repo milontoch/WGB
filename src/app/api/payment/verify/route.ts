@@ -38,13 +38,19 @@ export async function GET(request: NextRequest) {
     // Verify payment with Paystack
     const verification = await verifyPayment(reference);
 
-    console.log("Paystack verification response:", verification);
+    console.log("Paystack verification response:", JSON.stringify(verification, null, 2));
 
     if (!verification.status || verification.data.status !== "success") {
+      console.error("Payment verification failed:", {
+        verificationStatus: verification.status,
+        paymentStatus: verification.data?.status,
+        fullResponse: verification
+      });
       return NextResponse.json(
         {
           success: false,
           error: "Payment verification failed",
+          details: verification.message || "Payment was not successful",
           payment: verification,
         },
         { status: 400 }

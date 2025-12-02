@@ -46,42 +46,51 @@ export function Navigation() {
   }, [user]);
 
   return (
-    <nav className="fixed w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="fixed w-full bg-white/98 backdrop-blur-md shadow-sm z-50 border-b border-[#111111]/5">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-primary">
-              Beauty<span className="text-gray-900">Co</span>
+            <Link href="/" className="flex items-center">
+              <span className="font-['Poppins'] text-2xl font-bold text-[#111111]">
+                WGB
+              </span>
+              <span className="ml-2 text-sm text-[#D4B58E] font-light tracking-widest">BEAUTY</span>
             </Link>
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-10">
+            <Link
+              href="/"
+              className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
+            >
+              HOME
+            </Link>
             <Link
               href="/services"
-              className="text-gray-700 hover:text-primary transition-colors"
+              className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
             >
-              Services
+              SERVICES
             </Link>
             <Link
               href="/shop"
-              className="text-gray-700 hover:text-primary transition-colors"
+              className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
             >
-              Shop
+              STORE
             </Link>
             <Link
               href="/booking"
-              className="text-gray-700 hover:text-primary transition-colors"
+              className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
             >
-              Booking
+              BOOKING
             </Link>
             {isAdmin && (
               <Link
                 href="/admin"
-                className="text-gray-700 hover:text-primary transition-colors"
+                className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
               >
-                Admin
+                ADMIN
               </Link>
             )}
           </div>
@@ -91,7 +100,7 @@ export function Navigation() {
             {/* Cart Icon */}
             <Link
               href="/cart"
-              className="relative p-2 text-gray-700 hover:text-primary transition-colors"
+              className="relative p-2 text-[#111111]/70 hover:text-[#D4B58E] transition-colors"
             >
               <svg
                 className="h-6 w-6"
@@ -106,39 +115,41 @@ export function Navigation() {
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
               </svg>
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full">
-                {cartCount}
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-[#D4B58E] rounded-full">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             {/* Auth Buttons */}
             {!loading && (
               <>
                 {user ? (
-                  <div className="hidden md:flex items-center space-x-4">
-                    <span className="text-sm text-gray-700">
+                  <div className="hidden lg:flex items-center space-x-4">
+                    <span className="text-sm text-[#111111]/60 font-light">
                       {user.profile?.full_name || user.email}
                     </span>
                     <button
                       onClick={signOut}
-                      className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                      className="px-6 py-2.5 border border-[#111111]/20 text-sm font-medium rounded-full text-[#111111]/70 bg-white hover:border-[#D4B58E] hover:text-[#D4B58E] transition-all"
                     >
-                      Sign Out
+                      SIGN OUT
                     </button>
                   </div>
                 ) : (
-                  <div className="hidden md:flex items-center space-x-2">
+                  <div className="hidden lg:flex items-center space-x-3">
                     <Link
                       href="/auth/login"
-                      className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                      className="px-6 py-2.5 border border-[#111111]/20 text-sm font-medium rounded-full text-[#111111]/70 bg-white hover:border-[#D4B58E] hover:text-[#D4B58E] transition-all"
                     >
-                      Sign In
+                      SIGN IN
                     </Link>
                     <Link
                       href="/auth/register"
-                      className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors"
+                      className="px-6 py-2.5 bg-[#D4B58E] text-white text-sm font-medium rounded-full hover:bg-[#C4A57E] transition-all shadow-md hover:shadow-lg"
                     >
-                      Sign Up
+                      SIGN UP
                     </Link>
                   </div>
                 )}
@@ -148,7 +159,7 @@ export function Navigation() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary hover:bg-gray-100"
+              className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-[#111111]/70 hover:text-[#D4B58E] hover:bg-[#FAF7F2]"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               <svg
@@ -179,36 +190,43 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="lg:hidden py-6 border-t border-[#111111]/5 bg-white">
             <div className="flex flex-col space-y-4">
               <Link
-                href="/services"
-                className="text-gray-700 hover:text-primary transition-colors px-2 py-2"
+                href="/"
+                className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors px-2 py-2 text-sm font-medium tracking-wide"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Services
+                HOME
+              </Link>
+              <Link
+                href="/services"
+                className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors px-2 py-2 text-sm font-medium tracking-wide"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                SERVICES
               </Link>
               <Link
                 href="/shop"
-                className="text-gray-700 hover:text-primary transition-colors px-2 py-2"
+                className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors px-2 py-2 text-sm font-medium tracking-wide"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Shop
+                STORE
               </Link>
               <Link
                 href="/booking"
-                className="text-gray-700 hover:text-primary transition-colors px-2 py-2"
+                className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors px-2 py-2 text-sm font-medium tracking-wide"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Booking
+                BOOKING
               </Link>
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="text-gray-700 hover:text-primary transition-colors px-2 py-2"
+                  className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors px-2 py-2 text-sm font-medium tracking-wide"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Admin
+                  ADMIN
                 </Link>
               )}
 
@@ -217,7 +235,7 @@ export function Navigation() {
                 <>
                   {user ? (
                     <>
-                      <div className="px-2 py-2 text-sm text-gray-700 border-t border-gray-200 pt-4">
+                      <div className="px-2 py-3 text-sm text-[#111111]/60 border-t border-[#111111]/5 pt-6 font-light">
                         {user.profile?.full_name || user.email}
                       </div>
                       <button
@@ -225,28 +243,28 @@ export function Navigation() {
                           signOut();
                           setMobileMenuOpen(false);
                         }}
-                        className="w-full text-left px-2 py-2 text-gray-700 hover:text-primary transition-colors"
+                        className="w-full text-left px-2 py-2 text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
                       >
-                        Sign Out
+                        SIGN OUT
                       </button>
                     </>
                   ) : (
-                    <>
+                    <div className="space-y-3 pt-4 border-t border-[#111111]/5">
                       <Link
                         href="/auth/login"
-                        className="px-2 py-2 text-gray-700 hover:text-primary transition-colors border-t border-gray-200 pt-4"
+                        className="block w-full text-center px-6 py-3 border border-[#111111]/20 text-sm font-medium rounded-full text-[#111111]/70 bg-white hover:border-[#D4B58E] hover:text-[#D4B58E] transition-all"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Sign In
+                        SIGN IN
                       </Link>
                       <Link
                         href="/auth/register"
-                        className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors"
+                        className="block w-full text-center px-6 py-3 bg-[#D4B58E] text-white text-sm font-medium rounded-full hover:bg-[#C4A57E] transition-all shadow-md"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Sign Up
+                        SIGN UP
                       </Link>
-                    </>
+                    </div>
                   )}
                 </>
               )}

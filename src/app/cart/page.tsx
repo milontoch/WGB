@@ -211,6 +211,7 @@ export default function CartPage() {
                     {/* Quantity */}
                     <div className="flex items-center gap-4">
                       <select
+                        aria-label="Product quantity"
                         className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                         value={item.quantity}
                         onChange={(e) => updateQuantity(item.id, parseInt(e.target.value, 10))}

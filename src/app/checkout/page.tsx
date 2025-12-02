@@ -132,10 +132,11 @@ export default function CheckoutPage() {
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      <label htmlFor="first-name" className="block text-sm font-semibold text-gray-900 mb-2">
                         First Name *
                       </label>
                       <input
+                        id="first-name"
                         type="text"
                         required
                         value={formData.firstName}
@@ -149,10 +150,11 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      <label htmlFor="last-name" className="block text-sm font-semibold text-gray-900 mb-2">
                         Last Name *
                       </label>
                       <input
+                        id="last-name"
                         type="text"
                         required
                         value={formData.lastName}
@@ -163,10 +165,11 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
                         Email *
                       </label>
                       <input
+                        id="email"
                         type="email"
                         required
                         value={formData.email}
@@ -177,10 +180,11 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-2">
                         Phone Number *
                       </label>
                       <input
+                        id="phone"
                         type="tel"
                         required
                         value={formData.phone}
@@ -216,10 +220,11 @@ export default function CheckoutPage() {
                     </h2>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        <label htmlFor="address" className="block text-sm font-semibold text-gray-900 mb-2">
                           Street Address *
                         </label>
                         <input
+                          id="address"
                           type="text"
                           required
                           value={formData.address}
@@ -234,10 +239,11 @@ export default function CheckoutPage() {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          <label htmlFor="city" className="block text-sm font-semibold text-gray-900 mb-2">
                             City *
                           </label>
                           <input
+                            id="city"
                             type="text"
                             required
                             value={formData.city}
@@ -248,10 +254,11 @@ export default function CheckoutPage() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-900 mb-2">
+                          <label htmlFor="state" className="block text-sm font-semibold text-gray-900 mb-2">
                             State *
                           </label>
                           <input
+                            id="state"
                             type="text"
                             required
                             value={formData.state}

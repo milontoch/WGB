@@ -233,6 +233,7 @@ export default function NotificationsPage() {
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
+                aria-label="Filter by notification type"
                 className="px-4 py-2 border border-gray-300 rounded-lg"
               >
                 <option value="">All Types</option>
@@ -249,6 +250,7 @@ export default function NotificationsPage() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
+                aria-label="Filter by notification status"
                 className="px-4 py-2 border border-gray-300 rounded-lg"
               >
                 <option value="">All Statuses</option>
@@ -361,10 +363,11 @@ export default function NotificationsPage() {
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="target-audience" className="block text-sm font-semibold text-gray-700 mb-2">
                   Target Audience *
                 </label>
                 <select
+                  id="target-audience"
                   value={targetAudience}
                   onChange={(e) => setTargetAudience(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
