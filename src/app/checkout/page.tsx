@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import toast from 'react-hot-toast';
 import { Container } from "@/components/container";
 import { LoadingSpinner } from "@/components/ui/loading";
 
@@ -24,6 +25,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [isPickup, setIsPickup] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -56,7 +58,7 @@ export default function CheckoutPage() {
 
       setCartData(data);
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to load cart');
       router.push("/cart");
     } finally {
       setLoading(false);
@@ -69,6 +71,28 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    const errors: Record<string, string> = {};
+    if (!formData.firstName.trim()) errors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) errors.lastName = 'Last name is required';
+    if (!formData.email.trim()) errors.email = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = 'Invalid email format';
+    if (!formData.phone.trim()) errors.phone = 'Phone number is required';
+    
+    if (!isPickup) {
+      if (!formData.address.trim()) errors.address = 'Address is required';
+      if (!formData.city.trim()) errors.city = 'City is required';
+      if (!formData.state.trim()) errors.state = 'State is required';
+    }
+    
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      toast.error('Please fix the form errors');
+      return;
+    }
+    
+    setValidationErrors({});
     setSubmitting(true);
 
     try {
@@ -99,7 +123,7 @@ export default function CheckoutPage() {
       // Redirect to Paystack payment page
       window.location.href = data.authorization_url;
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message || 'Payment initialization failed');
       setSubmitting(false);
     }
   };
@@ -140,14 +164,24 @@ export default function CheckoutPage() {
                         type="text"
                         required
                         value={formData.firstName}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setFormData({
                             ...formData,
                             firstName: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"
+                          });
+                          if (validationErrors.firstName) {
+                            setValidationErrors({ ...validationErrors, firstName: '' });
+                          }
+                        }}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                          validationErrors.firstName 
+                            ? 'border-red-500 focus:ring-red-500' 
+                            : 'border-gray-300 focus:ring-[#D4B58E]'
+                        }`}
                       />
+                      {validationErrors.firstName && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.firstName}</p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="last-name" className="block text-sm font-semibold text-gray-900 mb-2">
@@ -158,11 +192,21 @@ export default function CheckoutPage() {
                         type="text"
                         required
                         value={formData.lastName}
-                        onChange={(e) =>
-                          setFormData({ ...formData, lastName: e.target.value })
-                        }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"
+                        onChange={(e) => {
+                          setFormData({ ...formData, lastName: e.target.value });
+                          if (validationErrors.lastName) {
+                            setValidationErrors({ ...validationErrors, lastName: '' });
+                          }
+                        }}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                          validationErrors.lastName 
+                            ? 'border-red-500 focus:ring-red-500' 
+                            : 'border-gray-300 focus:ring-[#D4B58E]'
+                        }`}
                       />
+                      {validationErrors.lastName && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.lastName}</p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
@@ -173,11 +217,21 @@ export default function CheckoutPage() {
                         type="email"
                         required
                         value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"
+                        onChange={(e) => {
+                          setFormData({ ...formData, email: e.target.value });
+                          if (validationErrors.email) {
+                            setValidationErrors({ ...validationErrors, email: '' });
+                          }
+                        }}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                          validationErrors.email 
+                            ? 'border-red-500 focus:ring-red-500' 
+                            : 'border-gray-300 focus:ring-[#D4B58E]'
+                        }`}
                       />
+                      {validationErrors.email && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-2">
@@ -188,11 +242,21 @@ export default function CheckoutPage() {
                         type="tel"
                         required
                         value={formData.phone}
-                        onChange={(e) =>
-                          setFormData({ ...formData, phone: e.target.value })
-                        }
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"
+                        onChange={(e) => {
+                          setFormData({ ...formData, phone: e.target.value });
+                          if (validationErrors.phone) {
+                            setValidationErrors({ ...validationErrors, phone: '' });
+                          }
+                        }}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                          validationErrors.phone 
+                            ? 'border-red-500 focus:ring-red-500' 
+                            : 'border-gray-300 focus:ring-[#D4B58E]'
+                        }`}
                       />
+                      {validationErrors.phone && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.phone}</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -226,16 +290,26 @@ export default function CheckoutPage() {
                         <input
                           id="address"
                           type="text"
-                          required
+                          required={!isPickup}
                           value={formData.address}
-                          onChange={(e) =>
+                          onChange={(e) => {
                             setFormData({
                               ...formData,
                               address: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"
+                            });
+                            if (validationErrors.address) {
+                              setValidationErrors({ ...validationErrors, address: '' });
+                            }
+                          }}
+                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                            validationErrors.address 
+                              ? 'border-red-500 focus:ring-red-500' 
+                              : 'border-gray-300 focus:ring-[#D4B58E]'
+                          }`}
                         />
+                        {validationErrors.address && (
+                          <p className="text-red-500 text-sm mt-1">{validationErrors.address}</p>
+                        )}
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -245,13 +319,23 @@ export default function CheckoutPage() {
                           <input
                             id="city"
                             type="text"
-                            required
+                            required={!isPickup}
                             value={formData.city}
-                            onChange={(e) =>
-                              setFormData({ ...formData, city: e.target.value })
-                            }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"
+                            onChange={(e) => {
+                              setFormData({ ...formData, city: e.target.value });
+                              if (validationErrors.city) {
+                                setValidationErrors({ ...validationErrors, city: '' });
+                              }
+                            }}
+                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                              validationErrors.city 
+                                ? 'border-red-500 focus:ring-red-500' 
+                                : 'border-gray-300 focus:ring-[#D4B58E]'
+                            }`}
                           />
+                          {validationErrors.city && (
+                            <p className="text-red-500 text-sm mt-1">{validationErrors.city}</p>
+                          )}
                         </div>
                         <div>
                           <label htmlFor="state" className="block text-sm font-semibold text-gray-900 mb-2">
@@ -260,16 +344,26 @@ export default function CheckoutPage() {
                           <input
                             id="state"
                             type="text"
-                            required
+                            required={!isPickup}
                             value={formData.state}
-                            onChange={(e) =>
+                            onChange={(e) => {
                               setFormData({
                                 ...formData,
                                 state: e.target.value,
-                              })
-                            }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"
+                              });
+                              if (validationErrors.state) {
+                                setValidationErrors({ ...validationErrors, state: '' });
+                              }
+                            }}
+                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
+                              validationErrors.state 
+                                ? 'border-red-500 focus:ring-red-500' 
+                                : 'border-gray-300 focus:ring-[#D4B58E]'
+                            }`}
                           />
+                          {validationErrors.state && (
+                            <p className="text-red-500 text-sm mt-1">{validationErrors.state}</p>
+                          )}
                         </div>
                       </div>
                     </div>

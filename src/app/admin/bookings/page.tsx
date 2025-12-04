@@ -6,6 +6,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 import { ErrorMessage } from "@/components/ui/error";
 import { LoadingSpinner } from "@/components/ui/loading";
 
@@ -71,8 +72,9 @@ export default function AdminBookingsPage() {
           b.id === id ? { ...b, status: newStatus as any } : b
         )
       );
+      toast.success('Booking status updated');
     } catch (err: any) {
-      alert(`Error: ${err.message}`);
+      toast.error(err.message || 'Failed to update booking');
     } finally {
       setUpdatingId(null);
     }

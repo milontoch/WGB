@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import toast from 'react-hot-toast';
 import { ErrorMessage } from "@/components/ui/error";
 import { LoadingSpinner } from "@/components/ui/loading";
 import type { Service } from "@/lib/supabase/config";
@@ -51,8 +52,9 @@ export default function AdminServicesPage() {
           s.id === id ? { ...s, is_active: !currentStatus } : s
         )
       );
+      toast.success('Service updated');
     } catch (err: any) {
-      alert(`Error: ${err.message}`);
+      toast.error(err.message || 'Failed to update service');
     }
   };
 
@@ -69,8 +71,9 @@ export default function AdminServicesPage() {
 
       // Remove from local state
       setServices(services.filter((s) => s.id !== id));
+      toast.success('Service deleted');
     } catch (err: any) {
-      alert(`Error: ${err.message}`);
+      toast.error(err.message || 'Failed to delete service');
     } finally {
       setDeletingId(null);
     }

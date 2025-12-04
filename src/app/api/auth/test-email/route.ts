@@ -57,7 +57,7 @@ export async function GET(req: Request) {
         success: false,
         error: error.message,
         help: {
-          "SMTP not configured": "Set SMTP_USER and SMTP_PASS in .env.local",
+          "SMTP not configured": "Set SMTP_USER and SMTP_PASS environment variables",
           "Authentication failed": "Check your SMTP credentials are correct",
           "Connection refused": "Verify SMTP_HOST and SMTP_PORT are correct",
           "For Gmail":

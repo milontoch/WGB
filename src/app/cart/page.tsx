@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 import { Container } from '@/components/container';
 import { LoadingSpinner } from '@/components/ui/loading';
 import { ErrorMessage } from '@/components/ui/error';
@@ -87,7 +88,7 @@ export default function CartPage() {
 
       await fetchCart();
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to update quantity');
     } finally {
       setUpdatingItems((prev) => {
         const next = new Set(prev);
@@ -113,7 +114,7 @@ export default function CartPage() {
 
       await fetchCart();
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to remove item');
     } finally {
       setUpdatingItems((prev) => {
         const next = new Set(prev);

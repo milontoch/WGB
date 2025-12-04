@@ -124,7 +124,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
 
               <div className="pt-8">
                 <Link
-                  href="/booking"
+                  href={`/book/${service.id}`}
                   className="inline-flex items-center justify-center w-full px-8 py-5 bg-[#D4B58E] text-white text-sm font-semibold tracking-wide rounded-full hover:bg-[#C4A57E] transition-all shadow-lg hover:shadow-xl"
                 >
                   BOOK THIS SERVICE

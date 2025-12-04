@@ -12,7 +12,7 @@ import { ProductReviews } from '@/components/product-reviews';
 
 async function getProductDetails(id: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/products/${id}`,
+    `${process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : '')}/api/products/${id}`,
     { cache: 'no-store' }
   );
 

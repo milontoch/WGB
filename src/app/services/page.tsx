@@ -20,7 +20,6 @@ async function getServices() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("Error fetching services:", error);
     return [];
   }
 

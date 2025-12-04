@@ -184,7 +184,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
               <li>Personalized recommendations</li>
             </ul>
             <a href="${
-              process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+              process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ""
             }" 
                style="display: inline-block; background: linear-gradient(135deg, #E91E63, #9C27B0); color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 20px;">
               Get Started

@@ -33,9 +33,9 @@ export default async function TestSupabasePage() {
                 <br />
                 1. Created the tables in Supabase using the SQL schema
                 <br />
-                2. Updated .env.local with your Supabase credentials
+                2. Set environment variables with your Supabase credentials
                 <br />
-                3. Restarted your Next.js development server
+                3. Redeployed or restarted your application
               </p>
             </div>
           ) : (

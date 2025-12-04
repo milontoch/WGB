@@ -60,7 +60,6 @@ export default function MyBookingsPage() {
           setError("Failed to load bookings");
         }
       } catch (err) {
-        console.error("Error fetching bookings:", err);
         setError("Failed to load bookings");
       } finally {
         setLoading(false);
@@ -164,11 +163,19 @@ export default function MyBookingsPage() {
       <Container>
         <div className="max-w-4xl mx-auto py-12">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="font-serif text-4xl md:text-5xl text-gray-900 mb-2">
-              My Bookings
-            </h1>
-            <p className="text-gray-600">View and manage your appointments</p>
+          <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div>
+              <h1 className="font-serif text-4xl md:text-5xl text-gray-900 mb-2">
+                My Bookings
+              </h1>
+              <p className="text-gray-600">View and manage your appointments</p>
+            </div>
+            <Link
+              href="/services"
+              className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-xl hover:from-pink-600 hover:to-pink-700 transition-all shadow-md hover:shadow-lg font-semibold whitespace-nowrap"
+            >
+              Book New Service
+            </Link>
           </div>
 
           {/* Error Message */}

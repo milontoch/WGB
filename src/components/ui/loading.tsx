@@ -18,7 +18,7 @@ export function LoadingSpinner({ size = "md", message }: LoadingSpinnerProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <div
-        className={`${sizeClasses[size]} border-pink-600 border-t-transparent rounded-full animate-spin`}
+        className={`${sizeClasses[size]} border-[#D4B58E] border-t-transparent rounded-full animate-spin`}
       />
       {message && (
         <p className="text-gray-600 text-sm font-medium animate-pulse">
@@ -34,7 +34,7 @@ export function LoadingSpinner({ size = "md", message }: LoadingSpinnerProps) {
  */
 export function PageLoading({ message = "Loading..." }: { message?: string }) {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
+    <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
       <LoadingSpinner size="lg" message={message} />
     </div>
   );

@@ -8,6 +8,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import toast from 'react-hot-toast';
 import { Product } from "@/lib/supabase/config";
 
 export default function AdminProductsPage() {
@@ -25,7 +26,7 @@ export default function AdminProductsPage() {
       const data = await res.json();
       setProducts(data.products || []);
     } catch (err) {
-      console.error("Failed to fetch products:", err);
+      // Error handled by empty state
     } finally {
       setLoading(false);
     }
@@ -44,8 +45,9 @@ export default function AdminProductsPage() {
       setProducts((prev) =>
         prev.map((p) => (p.id === id ? { ...p, is_active: !currentStatus } : p))
       );
+      toast.success('Product updated');
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to update product');
     }
   };
 
@@ -60,8 +62,9 @@ export default function AdminProductsPage() {
       if (!res.ok) throw new Error("Failed to delete product");
 
       setProducts((prev) => prev.filter((p) => p.id !== id));
+      toast.success('Product deleted');
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to delete product');
     }
   };
 

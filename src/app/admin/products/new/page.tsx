@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from 'react-hot-toast';
 
 const CATEGORIES = ["Skincare", "Haircare", "Makeup", "Nails", "Spa", "Tools"];
 
@@ -48,8 +49,9 @@ export default function NewProductPage() {
       }
 
       router.push("/admin/products");
+      toast.success('Product created successfully');
     } catch (err: any) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to create product');
       setLoading(false);
     }
   };

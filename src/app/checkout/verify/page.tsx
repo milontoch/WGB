@@ -26,8 +26,6 @@ function VerifyPaymentContent() {
       const res = await fetch(`/api/payment/verify?reference=${reference}`);
       const data = await res.json();
 
-      console.log("Verification response:", data);
-
       if (!res.ok || !data.success) {
         throw new Error(data.error || data.details || "Payment verification failed");
       }

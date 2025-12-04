@@ -56,7 +56,6 @@ export default function BookingPage({
           setError("Service not found");
         }
       } catch (err) {
-        console.error("Error fetching service:", err);
         setError("Failed to load service details");
       } finally {
         setServiceLoading(false);
@@ -82,7 +81,7 @@ export default function BookingPage({
           setTimeSlots(data.slots || []);
         }
       } catch (err) {
-        console.error("Error fetching slots:", err);
+        // Silently fail - slots will be empty
       }
     }
     fetchSlots();
