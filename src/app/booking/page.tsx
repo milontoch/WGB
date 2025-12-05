@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { Container } from "@/components/container";
 import { useAuth } from "@/contexts/auth-context";
 
@@ -47,27 +48,49 @@ export default function MyBookingsPage() {
   }, [user, authLoading, router]);
 
   // Fetch bookings
-  useEffect(() => {
-    async function fetchBookings() {
-      if (!user) return;
+  const fetchBookings = useCallback(async () => {
+    if (!user) return;
 
-      try {
-        const res = await fetch("/api/bookings/my-bookings");
-        if (res.ok) {
-          const data = await res.json();
-          setBookings(data.bookings || []);
-        } else {
-          setError("Failed to load bookings");
-        }
-      } catch (err) {
-        setError("Failed to load bookings");
-      } finally {
-        setLoading(false);
+    try {
+      setLoading(true);
+      setError("");
+
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const res = await fetch("/api/bookings/my-bookings", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
       }
-    }
 
-    fetchBookings();
+      const data = await res.json();
+      setBookings(data.bookings || []);
+    } catch (err: any) {
+      console.error("Booking fetch error:", err);
+      const errorMessage = err.name === 'AbortError'
+        ? "Request timed out. Please try again."
+        : err.message || "Failed to load bookings";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   }, [user]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
 
   const handleCancel = async (bookingId: string) => {
     if (!confirm("Are you sure you want to cancel this booking?")) {
@@ -153,6 +176,12 @@ export default function MyBookingsPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading your bookings...</p>
+          <button
+            onClick={fetchBookings}
+            className="mt-4 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+          >
+            Refresh
+          </button>
         </div>
       </div>
     );
@@ -181,7 +210,15 @@ export default function MyBookingsPage() {
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-              <p className="text-sm text-red-600">{error}</p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-red-600">{error}</p>
+                <button
+                  onClick={fetchBookings}
+                  className="px-3 py-1 bg-pink-600 text-white text-sm rounded hover:bg-pink-700 transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
             </div>
           )}
 

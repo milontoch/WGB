@@ -130,11 +130,19 @@ export function Navigation() {
                     <span className="text-sm text-[#111111]/60 font-light">
                       {user.profile?.full_name || user.email}
                     </span>
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        className="px-4 py-2 bg-[#111111] text-white text-sm font-medium rounded-full hover:bg-[#D4B58E] hover:text-[#111111] transition-all"
+                      >
+                        ADMIN
+                      </Link>
+                    )}
                     <button
                       onClick={signOut}
-                      className="px-6 py-2.5 border border-[#111111]/20 text-sm font-medium rounded-full text-[#111111]/70 bg-white hover:border-[#D4B58E] hover:text-[#D4B58E] transition-all"
+                      className="px-6 py-2.5 border border-[#111111]/20 text-sm font-medium rounded-full text-[#111111]/70 bg-white hover:border-red-500 hover:text-red-500 transition-all"
                     >
-                      SIGN OUT
+                      LOGOUT
                     </button>
                   </div>
                 ) : (
@@ -238,14 +246,23 @@ export function Navigation() {
                       <div className="px-2 py-3 text-sm text-[#111111]/60 border-t border-[#111111]/5 pt-6 font-light">
                         {user.profile?.full_name || user.email}
                       </div>
+                      {isAdmin && (
+                        <Link
+                          href="/admin"
+                          className="block w-full text-center px-6 py-3 bg-[#111111] text-white text-sm font-medium rounded-full hover:bg-[#D4B58E] hover:text-[#111111] transition-all mb-3"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          ADMIN PANEL
+                        </Link>
+                      )}
                       <button
                         onClick={() => {
                           signOut();
                           setMobileMenuOpen(false);
                         }}
-                        className="w-full text-left px-2 py-2 text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
+                        className="block w-full text-center px-6 py-3 border border-red-500 text-red-500 text-sm font-medium rounded-full hover:bg-red-500 hover:text-white transition-all"
                       >
-                        SIGN OUT
+                        LOGOUT
                       </button>
                     </>
                   ) : (

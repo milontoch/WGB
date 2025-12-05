@@ -11,10 +11,11 @@ import { AddToCartButton } from '@/components/add-to-cart-button';
 import { ProductReviews } from '@/components/product-reviews';
 
 async function getProductDetails(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : '')}/api/products/${id}`,
-    { cache: 'no-store' }
-  );
+  // Use absolute URL for server-side fetch
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  
+  const res = await fetch(`${baseUrl}/api/products/${id}`, { cache: 'no-store' });
 
   if (!res.ok) return null;
   return res.json();
