@@ -56,10 +56,12 @@ CREATE TABLE IF NOT EXISTS orders (
   customer_name VARCHAR(255) NOT NULL,
   customer_email VARCHAR(255) NOT NULL,
   customer_phone VARCHAR(50),
-  shipping_address TEXT NOT NULL,
+  shipping_address TEXT,
   shipping_city VARCHAR(100),
   shipping_state VARCHAR(100),
   is_pickup BOOLEAN DEFAULT false,
+  payment_verified BOOLEAN DEFAULT false,
+  payment_date TIMESTAMPTZ,
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

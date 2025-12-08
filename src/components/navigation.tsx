@@ -85,6 +85,14 @@ export function Navigation() {
             >
               BOOKING
             </Link>
+            {user && (
+              <Link
+                href="/orders"
+                className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors text-sm font-medium tracking-wide"
+              >
+                ORDERS
+              </Link>
+            )}
             {isAdmin && (
               <Link
                 href="/admin"
@@ -228,6 +236,15 @@ export function Navigation() {
               >
                 BOOKING
               </Link>
+              {user && (
+                <Link
+                  href="/orders"
+                  className="text-[#111111]/70 hover:text-[#D4B58E] transition-colors px-2 py-2 text-sm font-medium tracking-wide"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  ORDERS
+                </Link>
+              )}
               {isAdmin && (
                 <Link
                   href="/admin"

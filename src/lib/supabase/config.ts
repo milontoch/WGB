@@ -131,10 +131,12 @@ export interface Order {
     | "delivered"
     | "cancelled";
   payment_reference: string | null;
+  payment_verified?: boolean;
+  payment_date?: string | null;
   customer_name: string;
   customer_email: string;
   customer_phone: string | null;
-  shipping_address: string;
+  shipping_address: string | null;
   shipping_city: string | null;
   shipping_state: string | null;
   is_pickup: boolean;
